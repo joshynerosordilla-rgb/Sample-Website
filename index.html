@@ -3,84 +3,88 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SampleWebsite</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@600;800&display=swap" rel="stylesheet">
-<style>body{font-family:'Inter',sans-serif}</style>
+<title>Pares ni Josh - Las Piñas | Order Online</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family: -apple-system,BlinkMacSystemFont,sans-serif}
+body{background:#fff7ed}
+.header{background:linear-gradient(135deg,#dc2626,#991b1b);color:white;padding:25px;text-align:center}
+.header h1{font-size:28px}
+.header p{opacity:0.9;margin-top:5px}
+.container{max-width:480px;margin:0 auto;padding:15px}
+.card{background:white;border-radius:16px;padding:15px;margin:12px 0;box-shadow:0 2px 8px rgba(0,0,0,0.08);display:flex;justify-content:space-between;align-items:center}
+.card h3{font-size:16px}
+.card span{color:#dc2626;font-weight:bold}
+.btn{background:#dc2626;color:white;border:none;padding:8px 16px;border-radius:20px;font-weight:bold}
+.cart{position:sticky;bottom:15px;background:#111827;color:white;border-radius:20px;padding:16px;margin-top:20px}
+.cart button{width:100%;padding:14px;border-radius:12px;border:none;font-weight:bold;margin-top:8px;font-size:15px}
+.order{background:#dc2626;color:white}
+.gcash{background:white;color:#0072ff;display:flex;align-items:center;justify-content:center;gap:6px}
+.payinfo{background:#f0f9ff;border:1px dashed #0072ff;border-radius:12px;padding:10px;margin:10px 0;font-size:13px;text-align:center}
+</style>
 </head>
-<body class="bg-[#0f0f0f] text-white">
-<div class="max-w-[420px] mx-auto min-h-screen bg-[#1a1a1a]">
-<div class="bg-gradient-to-br from-orange-500 to-red-600 p-6">
-  <div class="flex justify-between">
-    <div>
-      <h1 class="text-3xl font-extrabold leading-tight">Paresan ni Mang Juan</h1>
-      <p class="text-orange-100 mt-1 text-sm">Almanza, Las Pinas - 30 mins delivery</p>
-    </div>
-    <div class="bg-white text-black text-xs font-bold px-3 py-1 rounded-full h-fit">OPEN</div>
-  </div>
+<body>
+<div class="header">
+<h1>🔥 PARES NI JOSH</h1>
+<p>Las Piñas • Open 10AM-10PM • Free Delivery Nearby</p>
 </div>
-<div class="bg-[#252525] p-3 text-center text-sm text-gray-300 flex justify-center gap-4">
-  <span>4.9 stars (127 reviews)</span>
-  <span>500+ orders</span>
+
+<div class="container">
+<div id="menu"></div>
+
+<div class="payinfo">
+💙 <b>GCash:</b> 09242337211<br>Josh Ynero Sordilla<br><i>Send screenshot after payment</i>
 </div>
-<div class="p-5 space-y-4" id="menu">
-  <h2 class="font-bold text-lg">Pili ka, Bossing</h2>
-</div>
-<div class="sticky bottom-0 bg-[#1a1a1a] border-t border-[#333] p-5">
-  <div class="flex justify-between text-lg mb-3">
-    <span>Total:</span>
-    <span class="font-extrabold text-orange-400" id="total">P0</span>
-  </div>
-  <button onclick="order()" class="w-full bg-orange-500 hover:bg-orange-600 text-black font-extrabold py-4 rounded-xl text-lg">
-    ORDER VIA MESSENGER
-  </button>
-  <p class="text-[11px] text-center text-gray-500 mt-2">GCash / COD - No extra fee</p>
+
+<div class="cart">
+<div style="display:flex;justify-content:space-between"><span id="count">0 items</span><b id="total">P0</b></div>
+<button class="order" onclick="orderMessenger()">📩 ORDER VIA MESSENGER</button>
+<button class="gcash" onclick="orderGCash()">💙 ORDER + PAY GCASH</button>
 </div>
 </div>
+
 <script>
-const items = [
-  {name:"Beef Pares Overload", price:120, best:true, desc:"With egg + chicharon"},
-  {name:"Pares Mami", price:110, desc:"Mainit na sabaw"},
-  {name:"Extra Rice", price:15, desc:"Unli? Add lang"},
-  {name:"Coke Sakto", price:20, desc:"Pang tulak"},
-];
-let cart = {};
-let total = 0;
-const menuDiv = document.getElementById('menu');
-items.forEach((it, i)=>{
-  menuDiv.innerHTML += `
-  <div class="bg-[#252525] p-4 rounded-2xl flex justify-between items-center">
-    <div>
-      <div class="font-bold flex gap-2 items-center">${it.name} ${it.best?'<span class="bg-orange-500 text-black text-[9px] px-2 py-0.5 rounded-full font-bold">BESTSELLER</span>':''}</div>
-      <div class="text-xs text-gray-400">${it.desc}</div>
-      <div class="text-orange-400 font-bold mt-1">P${it.price}</div>
-    </div>
-    <div class="flex items-center gap-3">
-      <button onclick="change(${i},-1)" class="w-8 h-8 bg-[#333] rounded-full">-</button>
-      <span id="q${i}" class="w-4 text-center">0</span>
-      <button onclick="change(${i},1)" class="w-8 h-8 bg-white text-black rounded-full font-bold">+</button>
-    </div>
-  </div>`;
-});
-function change(i,d){
-  cart[i] = Math.max(0,(cart[i]||0)+d);
-  document.getElementById('q'+i).innerText = cart[i];
-  calc();
+let items={
+1:{name:"Beef Pares",price:120,emoji:"🍖"},
+2:{name:"Pares + Rice + Egg",price:150,emoji:"🍳"},
+3:{name:"Extra Rice",price:20,emoji:"🍚"},
+4:{name:"Extra Sabaw",price:15,emoji:"🥣"},
+5:{name:"Softdrinks",price:25,emoji:"🥤"}
+};
+let cart={},total=0;
+let menuDiv=document.getElementById('menu');
+for(let id in items){
+cart[id]=0;
+menuDiv.innerHTML+=`<div class="card"><div><h3>${items[id].emoji} ${items[id].name}</h3><span>P${items[id].price}</span></div><div><button class="btn" onclick="add(${id},-1)">-</button> <span id="q${id}">0</span> <button class="btn" onclick="add(${id},1)">+</button></div></div>`;
 }
-function calc(){
-  total = 0;
-  for(let k in cart) total += cart[k]*items[k].price;
-  document.getElementById('total').innerText = 'P'+total;
+function add(id,n){
+cart[id]=Math.max(0,cart[id]+n);
+document.getElementById('q'+id).textContent=cart[id];
+update();
 }
-function order(){
-  if(total==0){ alert('Pili ka muna boss!'); return; }
-  let msg = 'Hello! Order po:\n';
-  for(let k in cart){
-    if(cart[k]>0) msg += cart[k] + 'x ' + items[k].name + '\n';
-  }
-  msg += 'Total: P' + total + '\n\nName:\nAddress:';
-  let url = 'https://m.me/YOUR_USERNAME?text=' + encodeURIComponent(msg);
-  window.location.href = url;
+function update(){
+total=0;let c=0;
+for(let id in cart){total+=cart[id]*items[id].price;c+=cart[id];}
+document.getElementById('total').textContent='P'+total;
+document.getElementById('count').textContent=c+' items';
+}
+function getMsg(){
+if(total==0){alert('Pili ka muna boss!');return null;}
+let msg='Hello Pares ni Josh! Order po:\n\n';
+for(let id in cart) if(cart[id]>0) msg+=`${cart[id]}x ${items[id].name} - P${cart[id]*items[id].price}\n`;
+msg+=`\nTotal: P${total}\n\nName:\nAddress:\nPayment: `;
+return msg;
+}
+function orderMessenger(){
+let msg=getMsg(); if(!msg) return;
+msg+='COD / Messenger';
+let url='https://m.me/josh.sordilla?text='+encodeURIComponent(msg);
+window.location.href=url;
+}
+function orderGCash(){
+let msg=getMsg(); if(!msg) return;
+msg+=`GCash - 09242337211 Josh Ynero Sordilla (P${total} sent)`;
+let url='https://m.me/joshynero.sordilla.1?text='+encodeURIComponent(msg);
+window.location.href=url;
 }
 </script>
 </body>
