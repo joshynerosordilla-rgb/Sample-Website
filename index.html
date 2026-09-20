@@ -73,11 +73,14 @@ function calc(){
   document.getElementById('total').innerText = 'P'+total;
 }
 function order(){
-  if(total==0) return alert('Pili ka muna boss!');
-  let msg = 'Hello! Order po:%0A';
-  for(let k in cart) if(cart[k]>0) msg+=`-${cart[k]}x ${items[k].name}%0A`;
-  msg+=`Total: P${total}%0A%0AName/Address: `;
-  window.open('https://m.me/joshynero.sordilla.1?text='+msg, '_blank');
+  if(total==0){ alert('Pili ka muna boss!'); return; }
+  let msg = 'Hello! Order po:\n';
+  for(let k in cart){
+    if(cart[k]>0) msg += cart[k] + 'x ' + items[k].name + '\n';
+  }
+  msg += 'Total: P' + total + '\n\nName:\nAddress:';
+  let url = 'https://m.me/YOUR_USERNAME?text=' + encodeURIComponent(msg);
+  window.location.href = url;
 }
 </script>
 </body>
